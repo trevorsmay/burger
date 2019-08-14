@@ -1,37 +1,65 @@
-<h1>Burgers!</h1>
 
-<h2>Burgers that should NOT be devoured!</h2>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Make a Burger!</h1>
+	</div>
+	
 
-<ul>
-    {{#each burger}}
-        {{#unless devoured}}
-            {{>burger/burger-block devoured=true}}
-        {{/unless}}    
-       {{/each}} 
-</ul>
+	<div class="row">
 
-<h2>Burgers that SHOULD be devoured!</h2>
+	<div class="col-md-4 col-md-offset-1">
+	 <div class="panel-panel default">
+	 	<h1>Your Burger is Ready </h1>
+	 	<ul class="list-group">
+	 		{{#each burger}}
+	 		 {{#unless this.devoured}}
+	 		 <li class="list-group-item">
+	 		  <div class="input-group">
+	 		  	<p class="lead">{{this.burger_name}}</p>
+	 		  	<span class="input-group-btn">
 
-<ul>
-    {{#each burger}}
-        {{#if sleepy}}
-            {{> burger/burger-block devoured=false}}
-        {{/if}}
-       {{/each}} 
-</ul>
+	 		  		<form action="burger/update/{{this.id}}?_method=PUT" method="POST">
+	 		  			<input type="hidden" name="devoured" value="true">
+	 		  			<button class="btn btn-default btn-lg" type="submit">Devoured</button>
+	 		  		</form>
+	 		  	</span>
+	 		  </div>
+	 		 </li>
+	 		 {{/unless}}
+	 		{{/each}}
+	 	</ul>
 
-<h2>Add a Burger</h2>
-<form class="create-form">
-    <div class="form-group">
-        <label for="ca">Burger Name:</label>
-        <input type="text" id="ca" name="name">
-    </div>
+	 </div>
+	</div>
 
-    <div class="form-group">
-        <label for="devoured">Devoured?</label><br>
-        <input type="radio" name="devoured" value="1" checked> Devoured!<br>
-        <input type="radio" name="devoured" value="0"> Awake
-    </div>
+	
+	<div class="row">
+		<div class="col-md-4 col-md-offset-2">
+			<h1>Devoured Burgers</h1>
+			<div class="panel panel-default">
+				<ul class="list-group">
+					{{#each burger}}
+					 {{#if this.devoured}}
+					 <li class="list-group-item">
+					 	<p class="lead">{{this.burger_name}}</p>
+					 </li>
+					 {{/if}}
+					  {{/each}}
+				</ul>
+			</div>
+		</div>
+	</div>
 
-    <button type="submit">Add Burger</button>
-</form>
+	<div class="col-md-10 col-md-offset-1">
+		<p class="lead">Place Order</p>
+		
+		<form class="create-update-form" action="burger/create" method="POST">
+		 <div class="form-group">
+		 	<textarea class="form-control input-lg" type="text" name="burger_name" row="3"></textarea>
+		 </div>
+		 <button class="btn btn-default btn-lg" type="submit">Submit</button>
+		</form>
+	</div>
+
+ </div>
+</div>

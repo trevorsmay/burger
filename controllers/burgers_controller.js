@@ -2,57 +2,41 @@ var express = require("express");
 
 var router = express.Router();
 
-//import the model burger.js to use db functions
 var burger = require("../models/burger.js");
 
-//create all routes and set up logic within routes 
-router.get("/", function(req, res) {
-    burger.all(function(data) {
-        var hbsObject = {
-            burger: data
-        };
-        console.log(hbsObject);
-        res.render("index", hbsObject);
-    });
+router.get("/", function(req,res){
+	res.redirect("burger")
 });
 
-router.post("/api/burger", function(req, res) {
-    burger.create([
-        "burger_name", "devoured"
-    ], [
-        req.body.burger_name, req.body.devoured 
-    ], function(result) {
-        
-        res.json({ id: result.insertId });
-    });
+router.get("/burger", function(req,res){
+	burger.selectAll(function(data){
+		var hbsObject = {
+			burger: data
+		};
+		console.log(burger);
+		res.render("index", hbsObject);
+	});
 });
 
-router.put("/api/burger/:id", function(req, res) {
-    var condition = "id = " + req.params.id;
-
-    console.log("condition", condition);
-
-    burger.update({
-        devoured: req.body.devoured
-    }, condition, function(result){
-        if (result.changedRows == 0) {
-            return res.status(404).end();
-        } else {
-            res.status(200).end();
-        }
-    });
+router.post("/burger/create", function(req,res){
+	burger.insertOne([
+		"burger_name"
+		],[
+			req.body.burger_name
+			], function(data){
+				res.redirect("/burger");
+			});
 });
 
-router.delete("/api/burger/:id", function(req, res) {
-    var condition = "id = " + req.params.id;
+router.put("/burger/update/:id", function(req,res){
+	var condition = "id = " + req.params.id;
+	console.log("condition", condition);
 
-    burger.delete(condition, function(result) {
-        if (result.affectedRows == 0) {
-            return res.status(404).end();
-        } else {
-            res.status(200).end();
-        }
-    });
+	burger.updateOne({
+		"devoured": req.body.devoured
+	}, condition, function(data){
+		res.redirect("/burger")
+	});
 });
 
 module.exports = router;
